@@ -45,10 +45,6 @@
 
 #include "Adafruit_NeoPixel.h"
 
-#ifdef TARGET_LPC1768
-  #include <time.h>
-#endif
-
 #if defined(NRF52) || defined(NRF52_SERIES)
 #include "nrf.h"
 
@@ -1857,6 +1853,7 @@ void Adafruit_NeoPixel::show(void) {
 #endif
 
 #elif defined(TARGET_LPC1768)
+  using namespace LPC176x;
   uint8_t  *ptr, *end, p, bitMask;
   ptr     =  pixels;
   end     =  ptr + numBytes;
@@ -1871,19 +1868,19 @@ void Adafruit_NeoPixel::show(void) {
         // data ONE high
         // min: 550 typ: 700 max: 5,500
         gpio_set(pin);
-        time::delay_ns(550);
+        delay_ns(600);
         // min: 450 typ: 600 max: 5,000
         gpio_clear(pin);
-        time::delay_ns(450);
+        delay_ns(500);
       } else {
         // data ZERO high
         // min: 200  typ: 350 max: 500
         gpio_set(pin);
-        time::delay_ns(200);
+        delay_ns(250);
         // data low
         // min: 450 typ: 600 max: 5,000
         gpio_clear(pin);
-        time::delay_ns(450);
+        delay_ns(500);
       }
       if(bitMask >>= 1) {
         // Move on to the next pixel
