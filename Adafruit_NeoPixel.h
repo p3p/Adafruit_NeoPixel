@@ -45,7 +45,7 @@
   #endif
 #endif
 
-#ifdef TARGET_LPC1768
+#if defined(TARGET_LPC1768) || defined(__PLAT_NATIVE_SIM__)
   #include <Arduino.h>
 #endif
 

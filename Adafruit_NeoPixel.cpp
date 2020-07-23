@@ -2224,7 +2224,79 @@ void Adafruit_NeoPixel::show(void) {
       first = 0;
     }
   }
+#elif defined(__PLAT_NATIVE_SIM__)
+#ifndef NEOPIXEL_DATA_ONE_HIGH
+  // min: 550 typical: 700 max: 5,500
+  #define NEOPIXEL_DATA_ONE_HIGH  700
+#endif
+#ifndef NEOPIXEL_DATA_ONE_LOW
+  // min: 450 typical: 600 max: 5,000
+  #define NEOPIXEL_DATA_ONE_LOW   600
+#endif
+#ifndef NEOPIXEL_DATA_ZERO_HIGH
+  // min: 200  typical: 350 max: 500
+  #define NEOPIXEL_DATA_ZERO_HIGH 350
+#endif
+#ifndef NEOPIXEL_DATA_ZERO_LOW
+  // min: 450 typical: 600 max: 5,000
+  #define NEOPIXEL_DATA_ZERO_LOW  600
+#endif
 
+  uint8_t  *ptr, *end, p, bitMask;
+  ptr     =  pixels;
+  end     =  ptr + numBytes;
+  p       = *ptr++;
+  bitMask =  0x80;
+
+#if defined(NEO_KHZ400) // 800 KHz check needed only if 400 KHz support enabled
+  if(is800KHz) {
+#endif
+    for(;;) {
+      if(p & bitMask) {
+        Gpio::set(pin);
+        kernel.delayNanos(NEOPIXEL_DATA_ONE_HIGH);
+        Gpio::clear(pin);
+        kernel.delayNanos(NEOPIXEL_DATA_ONE_LOW);
+      } else {
+        Gpio::set(pin);
+        kernel.delayNanos(NEOPIXEL_DATA_ZERO_HIGH);
+        Gpio::clear(pin);
+        kernel.delayNanos(NEOPIXEL_DATA_ZERO_LOW);
+      }
+      if(bitMask >>= 1) {
+        // Move on to the next pixel
+        asm("nop;");
+      } else {
+        if(ptr >= end) break;
+        p       = *ptr++;
+        bitMask = 0x80;
+      }
+    }
+#if defined(NEO_KHZ400)
+  } else { // 400 KHz bitstream
+    for(;;) {
+      if(p & bitMask) {
+        Gpio::set(pin);
+        kernel.delayNanos(NEOPIXEL_DATA_ONE_HIGH);
+        Gpio::clear(pin);
+        kernel.delayNanos(NEOPIXEL_DATA_ONE_LOW);
+      } else {
+        Gpio::set(pin);
+        kernel.delayNanos(NEOPIXEL_DATA_ZERO_HIGH);
+        Gpio::clear(pin);
+        kernel.delayNanos(NEOPIXEL_DATA_ZERO_LOW);
+      }
+      if(bitMask >>= 1) {
+        // Move on to the next pixel
+        asm("nop;");
+      } else {
+        if(ptr >= end) break;
+        p       = *ptr++;
+        bitMask = 0x80;
+      }
+    }
+  }
+#endif
 #else
 #error Architecture not supported
 #endif
