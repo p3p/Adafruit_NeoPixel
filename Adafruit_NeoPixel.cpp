@@ -2254,14 +2254,14 @@ void Adafruit_NeoPixel::show(void) {
     for(;;) {
       if(p & bitMask) {
         Gpio::set(pin);
-        kernel.delayNanos(NEOPIXEL_DATA_ONE_HIGH);
+        Kernel::delayNanos(NEOPIXEL_DATA_ONE_HIGH);
         Gpio::clear(pin);
-        kernel.delayNanos(NEOPIXEL_DATA_ONE_LOW);
+        Kernel::delayNanos(NEOPIXEL_DATA_ONE_LOW);
       } else {
         Gpio::set(pin);
-        kernel.delayNanos(NEOPIXEL_DATA_ZERO_HIGH);
+        Kernel::delayNanos(NEOPIXEL_DATA_ZERO_HIGH);
         Gpio::clear(pin);
-        kernel.delayNanos(NEOPIXEL_DATA_ZERO_LOW);
+        Kernel::delayNanos(NEOPIXEL_DATA_ZERO_LOW);
       }
       if(bitMask >>= 1) {
         // Move on to the next pixel
@@ -2277,14 +2277,14 @@ void Adafruit_NeoPixel::show(void) {
     for(;;) {
       if(p & bitMask) {
         Gpio::set(pin);
-        kernel.delayNanos(NEOPIXEL_DATA_ONE_HIGH);
+        Kernel::delayNanos(NEOPIXEL_DATA_ONE_HIGH);
         Gpio::clear(pin);
-        kernel.delayNanos(NEOPIXEL_DATA_ONE_LOW);
+        Kernel::delayNanos(NEOPIXEL_DATA_ONE_LOW);
       } else {
         Gpio::set(pin);
-        kernel.delayNanos(NEOPIXEL_DATA_ZERO_HIGH);
+        Kernel::delayNanos(NEOPIXEL_DATA_ZERO_HIGH);
         Gpio::clear(pin);
-        kernel.delayNanos(NEOPIXEL_DATA_ZERO_LOW);
+        Kernel::delayNanos(NEOPIXEL_DATA_ZERO_LOW);
       }
       if(bitMask >>= 1) {
         // Move on to the next pixel
